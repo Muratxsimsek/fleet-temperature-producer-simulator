@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: vhf-simulator
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: fleet-cabin-temperature-raw:com.fleet.temperature.dto.VHFMessageDto
+
+server:
+  port: 8081
+
+logging:
+  level:
+    com.fleet.temperature: INFO
+    org.springframework.kafka: INFO
+    org.apache.kafka: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+kafka:
+  topic:
+    fleet-cabin-temperature-raw: fleet.cabin_temperature.raw
+
+simulator:
+  default-mode: MEDIUM
+  aircraft-count: 24
+  temperature:
+    normal-range:
+      min: 18.0
+      max: 32.0
+    warning-threshold: 25.0
+    critical-threshold: 28.0
+  message-distribution:
+    normal: 80
+    warning: 15
+    critical: 5
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
